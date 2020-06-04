@@ -1,6 +1,6 @@
 <html>
 <head>
-<title>Order List</title>
+<title>Order of {{customer.name}}</title>
 <style>
     #custom {
       font-family: "Trebuchet MS", Arial, Helvetica, sans-serif;
@@ -51,38 +51,40 @@
 
     <table>
     		<tr>
-    			<td>CRM System</td>
-    			<td>5555-5555</td>
+    			<td>Customer: </td>
+    			<td>{{customer.name}}</td>
     		</tr>
     		<tr>
-    			<td>Silicon Valley, California</td>
-    			<td>crmsystem@mail.com</td>
+    			<td>Phone</td>
+    			<td>{{customer.phone}}</td>
     		</tr>
     		<tr>
-    			<td>1101</td>
-    			<td>www.moideveloper.com</td>
+    			<td>Email:</td>
+    			<td>{{customer.email}}</td>
     		</tr>
     </table>
 
     <hr>
     <br>
 
-    <p><strong>Product List</strong></p>
+    <p><strong>Orders of {{customer.name}}</strong></p>
 
     <table id="custom">
      <thead>
         <tr>
           <th>Product</th>
           <th>Category</th>
-          <th>Price</th>
+          <th>Date Ordered</th>
+          <th>Status</th>
         </tr>
      </thead>
      <tbody>
-       {% for product in products %}
+       {% for order in orders %}
           <tr>
-            <td>{{ product.name }}</td>
-            <td>{{ product.category }}</td>
-            <td>{{ product.price }}</td>
+            <td>{{order.product}}</td>
+            <td>{{order.product.category}}</td>
+            <td>{{order.date_created}}</td>
+            <td>{{order.status}}</td>
           </tr>
         {% endfor %} 
      </tbody>

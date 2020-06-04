@@ -35,6 +35,8 @@ def customer(request, pk_test):
 	context = { 'customer':customer, "orders":orders, 'order_count':order_count }
 	return render(request, 'accounts/customer.html', context)
 
+#Generacion de Reportes
+
 def render_to_pdf(template_src, context_dict={}):
 	template = get_template(template_src)
 	html  = template.render(context_dict)
@@ -44,21 +46,26 @@ def render_to_pdf(template_src, context_dict={}):
 		return HttpResponse(result.getvalue(), content_type='application/pdf')
 	return None
 
-class ViewPDF(View):
-	def get(self, request, *args, **kwargs):
-		products = Product.objects.all()
+#Generacion de reportes
 
+def DownloadPDF(request, type):
+	response = ViewPDF(request, type)
+	filename = "%s_List.pdf" %("Product")
+	content = "attachment; filename='%s'" %(filename)
+	response['Content-Disposition'] = content
+	return response
+
+#Obtencion de datos para el reporte y utilizacion de plantilla
+
+def ViewPDF(request, type):
+	if(type == 'products'):
+		products = Product.objects.all()
 		pdf = render_to_pdf('reports/product_rep.html', {"products":products})
 		return HttpResponse(pdf, content_type='application/pdf')
 
-class DownloadPDF(View):
-	def get(self, request, *args, **kwargs):
-		products = Product.objects.all()
-		
-		pdf = render_to_pdf('reports/product_rep.html', {"products":products})
-
-		response = HttpResponse(pdf, content_type='application/pdf')
-		filename = "%s_List.pdf" %("Product")
-		content = "attachment; filename='%s'" %(filename)
-		response['Content-Disposition'] = content
-		return response
+	elif(type == 'orders'):
+		pk_test = request.GET["customerID"]
+		customer = Customer.objects.get(id=pk_test)
+		orders = customer.order_set.all()
+		pdf = render_to_pdf('reports/orders_rep.html', {"orders":orders, "customer":customer})
+		return HttpResponse(pdf, content_type='application/pdf')

@@ -38,10 +38,23 @@
 <div class="row">
 	<div class="col">
 		<div class="card card-body">
-			<form method="get">
-
-		    <button class="btn btn-primary" type="submit">Search</button>
-		  </form>
+			<div class="row">
+			    <div class="col">
+			    	<form method="get" action="{% url 'pdf_view' 'orders' %}">
+						<input type="hidden" name="customerID" value="{{ customer.id }}">
+				    	<button class="btn btn-info" type="submit">View PDF</button>
+				  	</form>
+			    </div>
+			    <div class="col">
+				    <form method="get" action="{% url 'pdf_download' 'orders' %}">
+						<input type="hidden" name="customerID" value="{{ customer.id }}">
+					    <button class="btn btn-info" type="submit">Download PDF</button>
+				  	</form>
+			    </div>
+			    <div class="col">
+			      3 of 3
+			    </div>
+			  </div>
 		</div>
 	</div>
 	
@@ -55,7 +68,7 @@
 				<tr>
 					<th>Product</th>
 					<th>Category</th>
-					<th>Date Orderd</th>
+					<th>Date Ordered</th>
 					<th>Status</th>
 					<th>Update</th>
 					<th>Remove</th>
@@ -63,7 +76,7 @@
 				{% for order in orders %}
 					<tr>
 						<td>{{order.product}}</td>
-						<td>{{order.category}}</td>
+						<td>{{order.product.category}}</td>
 						<td>{{order.date_created}}</td>
 						<td>{{order.status}}</td>
 						<td><a class="btn btn-sm btn-info" href="#">Update</a></td>
