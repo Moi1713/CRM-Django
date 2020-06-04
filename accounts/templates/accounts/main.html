@@ -1,0 +1,29 @@
+<html>
+{% load static %}
+<head>
+	<title>Customer Relationship Management System</title>
+
+	<link rel="stylesheet" href="{% static 'dist/css/bootstrap.min.css' %}">
+	
+</head>
+<body>
+	
+	{% include 'accounts/navbar.html' %}
+	
+	<section class="content">
+    	<div class="container-fluid">
+		{% block content %}
+
+		{% endblock %}
+		</div>
+	</section>
+	
+
+	<hr>
+	<p>2020 - Customer Relationship Management System</p>
+
+	<script src="{% static 'dist/jquery-3.5.1.js' %}"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+	<script src="{% static 'dist/js/bootstrap.min.js' %}"></script>
+</body>
+</html>
