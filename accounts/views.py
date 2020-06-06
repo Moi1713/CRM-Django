@@ -18,35 +18,39 @@ from .forms import OrderForm, CustomerForm, ProductForm, CreateUserForm
 # Create your views here.
 
 def registerPage(request):
-	form = CreateUserForm()
-	
-	if request.method == 'POST':
-		form = CreateUserForm(request.POST)
-		if form.is_valid():
-			form.save()
-
-	return render(request, 'accounts/register.html', {'form':form})
+	if request.user.is_authenticated:
+		return redirect('home')
+	else:
+		form = CreateUserForm()
+		if request.method == 'POST':
+			form = CreateUserForm(request.POST)
+			if form.is_valid():
+				form.save()
+		return render(request, 'accounts/register.html', {'form':form})
 
 def loginPage(request):
+	if request.user.is_authenticated:
+		return redirect('home')
+	else:
+		if request.method == 'POST':
+			username = request.POST.get('username')
+			password = request.POST.get('password')
+			user = authenticate(request, username=username, password=password)
+			if user is not None:
+				login(request, user)
+				return redirect('home')
+			else:
+				messages.info(request, 'Username or Password incorrect')
+				return render(request, 'accounts/login.html')
 
-	if request.method == 'POST':
-		username = request.POST.get('username')
-		password = request.POST.get('password')
-		user = authenticate(request, username=username, password=password)
-		if user is not None:
-			login(request, user)
-			return redirect('home')
-		else:
-			messages.info(request, 'Username or Password incorrect')
-			return render(request, 'accounts/login.html')
-
-	return render(request, 'accounts/login.html')
+		return render(request, 'accounts/login.html')
 
 def logoutUser(request):
 	logout(request)
 	return redirect('login')
 
 #Pages
+@login_required(login_url='login')
 def home(request):
 	form = OrderForm()
 	if request.method == 'POST':
@@ -66,11 +70,13 @@ def home(request):
 
 	return render(request, 'accounts/dashboard.html', context)
 
+@login_required(login_url='login')
 def products(request):
 	products = Product.objects.all()
 
 	return render(request, 'accounts/products.html', { "products":products })
 
+@login_required(login_url='login')
 def customer(request, pk_test):
 	customer = Customer.objects.get(id=pk_test)
 	orders = customer.order_set.all()
@@ -80,7 +86,7 @@ def customer(request, pk_test):
 	return render(request, 'accounts/customer.html', context)
 
 #Generacion de Reportes
-
+@login_required(login_url='login')
 def render_to_pdf(template_src, context_dict={}):
 	template = get_template(template_src)
 	html  = template.render(context_dict)
@@ -91,7 +97,7 @@ def render_to_pdf(template_src, context_dict={}):
 	return None
 
 #Descarga de Reportes
-
+@login_required(login_url='login')
 def DownloadPDF(request, type):
 	response = ViewPDF(request, type)
 	filename = "%s_List.pdf" %("Product")
@@ -100,7 +106,7 @@ def DownloadPDF(request, type):
 	return response
 
 #Obtencion de datos y seleccion de plantilla para el reporte
-
+@login_required(login_url='login')
 def ViewPDF(request, type):
 	if(type == 'products'):
 		products = Product.objects.all()
@@ -117,6 +123,7 @@ def ViewPDF(request, type):
 #CRUD operations
 
 #Orders
+@login_required(login_url='login')
 def createOrder(request):
 	form = OrderForm()
 	if request.method == 'POST':
@@ -127,6 +134,7 @@ def createOrder(request):
 
 	return render(request, 'accounts/order_form.html', {'form':form})
 
+@login_required(login_url='login')
 def updateOrder(request, pk):
 
 	order = Order.objects.get(id=pk)
@@ -140,6 +148,7 @@ def updateOrder(request, pk):
 
 	return render(request, 'accounts/order_form.html', {"form":form})
 
+@login_required(login_url='login')
 def deleteOrder(request, pk):
 	order = Order.objects.get(id=pk)
 	if request.method == "POST":
@@ -149,6 +158,7 @@ def deleteOrder(request, pk):
 	return render(request, 'accounts/delete.html', {'item':order})
 
 #Customers
+@login_required(login_url='login')
 def createCustomer(request):
 	form = CustomerForm()
 	if request.method == 'POST':
@@ -159,6 +169,7 @@ def createCustomer(request):
 
 	return render(request, 'accounts/customer_form.html', {'form':form})
 
+@login_required(login_url='login')
 def createProduct(request):
 	form = ProductForm()
 	if request.method == 'POST':
