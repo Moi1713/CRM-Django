@@ -1,8 +1,8 @@
-{%  extends 'accounts/main.html' %}
+{% extends 'accounts/main.html' %}
 
 {% block content %}
 
-{%  include 'accounts/status.html' %}
+{% include 'accounts/status.html' %}
 
 <br>
 
@@ -11,7 +11,11 @@
 		<h5>CUSTOMERS:</h5>
 		<hr>
 		<div class="card card-body">
-			<a class="btn btn-primary  btn-sm btn-block" href="">Create Customer</a>
+			<a class="btn btn-primary btn-sm btn-block" href="{% url 'create_customer' %}">Create Customer</a>
+
+
+			
+
 			<table class="table table-sm">
 				<tr>
 					<th></th>
@@ -33,7 +37,20 @@
 		<h5>LAST 5 ORDERS</h5>
 		<hr>
 		<div class="card card-body">
-			<a class="btn btn-primary btn-sm btn-block" href="">Create Order</a>
+			<a class="btn btn-primary btn-sm btn-block" href="{% url 'create_order' %}">Create Order</a>
+
+			<button class="btn btn-sm btn-primary" id="add-test">Add Test</button>
+			<div class="form-wrapper hidden container card-body">
+				<form action="" method="POST">
+					{% csrf_token %}
+					{{form}}
+					<input class="btn btn-sm btn-info" type="submit" name="Submit">
+					<button class="btn btn-sm btn-danger" id="cancel-test">Cancel</button>
+				</form>
+			</div>
+
+			<p>Orders</p>
+
 			<table class="table table-sm">
 				<tr>
 					<th>Product</th>
@@ -48,8 +65,8 @@
 						<td>{{ order.product }}</td>
 						<td>{{ order.date_created }}</td>
 						<td>{{ order.status }}</td>
-						<td><a class="btn btn-sm btn-info" href="#">Update</a></td>
-						<td><a class="btn btn-sm btn-danger" href="#">Remove</a></td>
+						<td><a class="btn btn-sm btn-info" href="{% url 'update_order' order.id %}">Update</a></td>
+						<td><a class="btn btn-sm btn-danger" href="{% url 'delete_order' order.id %}">Delete</a></td>
 					</tr>
 				{% endfor %}
 		
@@ -58,5 +75,17 @@
 	</div>
 
 </div>
+
+<script>
+
+$('#add-test').on('click', function(){
+		$('.form-wrapper').removeClass('hidden')
+	})
+
+$('#cancel-test').on('click', function(){
+		$('.form-wrapper').addClass('hidden')
+	})
+
+</script>
 
 {% endblock %}

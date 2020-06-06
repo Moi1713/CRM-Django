@@ -5,6 +5,9 @@
 
 	<link rel="stylesheet" href="{% static 'dist/css/bootstrap.min.css' %}">
 	
+	<link rel="stylesheet" href="{% static 'dist/style.css' %}">
+	<script src="{% static 'dist/jquery-3.5.1.js' %}"></script>
+	
 </head>
 <body>
 	
@@ -17,12 +20,14 @@
 		{% endblock %}
 		</div>
 	</section>
+
 	
+	<footer class="page-footer font-small">
+  		<div class="footer-copyright text-center py-3">
+  			© 2020 Copyright: Customer Relationship Management System
+  		</div>
+	</footer>
 
-	<hr>
-	<p>2020 - Customer Relationship Management System</p>
-
-	<script src="{% static 'dist/jquery-3.5.1.js' %}"></script>
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
 	<script src="{% static 'dist/js/bootstrap.min.js' %}"></script>
 </body>

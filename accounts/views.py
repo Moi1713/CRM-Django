@@ -1,16 +1,60 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.http import HttpResponse
+from django.contrib.auth.forms import UserCreationForm
 
-from accounts.models import Product, Customer, Order
+from django.contrib.auth import authenticate, login, logout
+from django.contrib import messages
+from django.contrib.auth.decorators import login_required 
+
+from accounts.models import *
 
 from io import BytesIO
 from django.template.loader import get_template
 from django.views import View
 from xhtml2pdf import pisa
 
+from .forms import OrderForm, CustomerForm, ProductForm, CreateUserForm
+
 # Create your views here.
 
+def registerPage(request):
+	form = CreateUserForm()
+	
+	if request.method == 'POST':
+		form = CreateUserForm(request.POST)
+		if form.is_valid():
+			form.save()
+
+	return render(request, 'accounts/register.html', {'form':form})
+
+def loginPage(request):
+
+	if request.method == 'POST':
+		username = request.POST.get('username')
+		password = request.POST.get('password')
+		user = authenticate(request, username=username, password=password)
+		if user is not None:
+			login(request, user)
+			return redirect('home')
+		else:
+			messages.info(request, 'Username or Password incorrect')
+			return render(request, 'accounts/login.html')
+
+	return render(request, 'accounts/login.html')
+
+def logoutUser(request):
+	logout(request)
+	return redirect('login')
+
+#Pages
 def home(request):
+	form = OrderForm()
+	if request.method == 'POST':
+		form = OrderForm(request.POST)
+		if form.is_valid():
+			form.save()
+			return redirect('/')
+
 	orders = Order.objects.all()
 	customers = Customer.objects.all()
 	total_customers = customers.count()
@@ -18,7 +62,7 @@ def home(request):
 	delivered = orders.filter(status='Delivered').count()
 	pending = orders.filter(status='Pending').count()
 
-	context = {"orders":orders, "customers":customers, "total_orders":total_orders, "total_customers":total_customers, "delivered":delivered, "pending":pending}
+	context = {'form':form, "orders":orders, "customers":customers, "total_orders":total_orders, "total_customers":total_customers, "delivered":delivered, "pending":pending}
 
 	return render(request, 'accounts/dashboard.html', context)
 
@@ -46,7 +90,7 @@ def render_to_pdf(template_src, context_dict={}):
 		return HttpResponse(result.getvalue(), content_type='application/pdf')
 	return None
 
-#Generacion de reportes
+#Descarga de Reportes
 
 def DownloadPDF(request, type):
 	response = ViewPDF(request, type)
@@ -55,7 +99,7 @@ def DownloadPDF(request, type):
 	response['Content-Disposition'] = content
 	return response
 
-#Obtencion de datos para el reporte y utilizacion de plantilla
+#Obtencion de datos y seleccion de plantilla para el reporte
 
 def ViewPDF(request, type):
 	if(type == 'products'):
@@ -69,3 +113,58 @@ def ViewPDF(request, type):
 		orders = customer.order_set.all()
 		pdf = render_to_pdf('reports/orders_rep.html', {"orders":orders, "customer":customer})
 		return HttpResponse(pdf, content_type='application/pdf')
+
+#CRUD operations
+
+#Orders
+def createOrder(request):
+	form = OrderForm()
+	if request.method == 'POST':
+		form = OrderForm(request.POST)
+		if form.is_valid():
+			form.save()
+			return redirect('/')
+
+	return render(request, 'accounts/order_form.html', {'form':form})
+
+def updateOrder(request, pk):
+
+	order = Order.objects.get(id=pk)
+	form = OrderForm(instance=order)
+
+	if request.method == 'POST':
+		form = OrderForm(request.POST, instance=order)
+		if form.is_valid():
+			form.save()
+			return redirect('/')
+
+	return render(request, 'accounts/order_form.html', {"form":form})
+
+def deleteOrder(request, pk):
+	order = Order.objects.get(id=pk)
+	if request.method == "POST":
+		order.delete()
+		return redirect('/')
+
+	return render(request, 'accounts/delete.html', {'item':order})
+
+#Customers
+def createCustomer(request):
+	form = CustomerForm()
+	if request.method == 'POST':
+		form = CustomerForm(request.POST)
+		if form.is_valid():
+			form.save()
+			return redirect('/')
+
+	return render(request, 'accounts/customer_form.html', {'form':form})
+
+def createProduct(request):
+	form = ProductForm()
+	if request.method == 'POST':
+		form = ProductForm(request.POST)
+		if form.is_valid():
+			form.save()
+			return redirect('/')
+
+	return render(request, 'accounts/customer_form.html', {'form':form})

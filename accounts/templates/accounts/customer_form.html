@@ -1,0 +1,14 @@
+{% extends 'accounts/main.html' %}
+
+{% block content %}
+<br>
+<div class="card card-body container">
+	<p><strong>Add/Edit Customer</strong></p>
+	<form action="" method="POST">
+		{% csrf_token %}
+		{{form.as_p}}
+		<input class="btn btn-primary" type="submit" name="Submit">
+		<a class="btn btn-danger" href="{% url 'home' %}">Regresar</a>
+	</form>
+</div>
+{% endblock %}

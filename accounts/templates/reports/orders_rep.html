@@ -31,7 +31,7 @@
         }
         @frame footer_frame {           /* Another static Frame */
             -pdf-frame-content: footer_content;
-            left: 50pt; width: 512pt; top: 772pt; height: 20pt;
+            left: 420pt; width: 512pt; top: 772pt; height: 20pt;
         }
     }
 </style>
@@ -51,16 +51,12 @@
 
     <table>
     		<tr>
-    			<td>Customer: </td>
-    			<td>{{customer.name}}</td>
+    			<td>Customer: {{customer.name}}</td>
+          <td>Phone: {{customer.phone}}</td>
     		</tr>
     		<tr>
-    			<td>Phone</td>
-    			<td>{{customer.phone}}</td>
-    		</tr>
-    		<tr>
-    			<td>Email:</td>
-    			<td>{{customer.email}}</td>
+    			<td>Email: {{customer.email}}</td>
+          <td>Orders: </td>
     		</tr>
     </table>
 
