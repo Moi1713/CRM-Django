@@ -97,7 +97,6 @@ def customer(request, pk_test):
 	return render(request, 'accounts/customer.html', context)
 
 #Generacion de Reportes
-@login_required(login_url='login')
 def render_to_pdf(template_src, context_dict={}):
 	template = get_template(template_src)
 	html  = template.render(context_dict)
@@ -117,7 +116,6 @@ def DownloadPDF(request, type):
 	return response
 
 #Obtencion de datos y seleccion de plantilla para el reporte
-@login_required(login_url='login')
 def ViewPDF(request, type):
 	if(type == 'products'):
 		products = Product.objects.all()
