@@ -79,6 +79,7 @@ def home(request):
 		form = OrderForm(request.POST)
 		if form.is_valid():
 			form.save()
+			messages.success(request, 'Order created successfully')
 			return redirect('/')
 
 	orders = Order.objects.all()
@@ -132,7 +133,6 @@ def ViewPDF(request, type):
 		products = Product.objects.all()
 		pdf = render_to_pdf('reports/product_rep.html', {"products":products})
 		return HttpResponse(pdf, content_type='application/pdf')
-
 	elif(type == 'orders'):
 		pk_test = request.GET["customerID"]
 		customer = Customer.objects.get(id=pk_test)
@@ -173,6 +173,7 @@ def deleteOrder(request, pk):
 	order = Order.objects.get(id=pk)
 	if request.method == "POST":
 		order.delete()
+		messages.success(request, 'Order deleted successfully')
 		return redirect('/')
 
 	return render(request, 'accounts/delete.html', {'item':order})

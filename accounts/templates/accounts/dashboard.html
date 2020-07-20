@@ -37,15 +37,23 @@
 		<h5>LAST 5 ORDERS</h5>
 		<hr>
 		<div class="card card-body">
+			{% for message in messages %}
+		        <div class="alert alert-success alert-dismissible fade show" role="alert">
+					<strong>{{message}}</strong> 
+					<button type="button" class="close" data-dismiss="alert" aria-label="Close">
+					   <span aria-hidden="true">&times;</span>
+					</button>
+				</div>
+	        {% endfor %}
 			<a class="btn btn-primary btn-sm btn-block" href="{% url 'create_order' %}">Create Order</a>
 
-			<button class="btn btn-sm btn-primary" id="add-test">Add Test</button>
+			<button class="btn btn-sm btn-primary" id="add-test">Add Order</button>
 			<div class="form-wrapper hidden container card-body">
 				<form action="" method="POST">
 					{% csrf_token %}
 					{{form}}
 					<br>
-					<input class="btn btn-sm btn-info" type="submit" name="Submit">
+					<input class="btn btn-sm btn-info" type="submit" name="Submit" value="Submit">
 					<button class="btn btn-sm btn-danger" id="cancel-test">Cancel</button>
 				</form>
 			</div>
