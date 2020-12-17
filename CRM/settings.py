@@ -125,7 +125,12 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 
+MEDIA_URL = '/images/profiles/'
+
 #Static files Directory
 STATICFILES_DIRS = [
     os.path.join(BASE_DIR, 'accounts/static')
 ]
+
+#Specify where the images are going to be saved
+MEDIA_ROOT = os.path.join(BASE_DIR, 'static/images/profiles')

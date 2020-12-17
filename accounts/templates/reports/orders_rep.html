@@ -75,6 +75,7 @@
         </tr>
      </thead>
      <tbody>
+     {% if (order_count > 0): %}
        {% for order in orders %}
           <tr>
             <td>{{order.product}}</td>
@@ -82,7 +83,12 @@
             <td>{{order.date_created}}</td>
             <td>{{order.status}}</td>
           </tr>
-        {% endfor %} 
+        {% endfor %}
+      {% else: %}
+        <tr>
+          <td>No Products Found!</td>
+        </tr>
+      {% endif %} 
      </tbody>
    </table>
 

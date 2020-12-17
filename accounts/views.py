@@ -70,6 +70,20 @@ def userPage(request):
 		"delivered":delivered, "pending":pending}
 	return render(request, 'accounts/user.html', context)
 
+@login_required(login_url='login')
+@allowed_users(allowed_roles=['customer'])
+def accountSettings(request):
+	customer = request.user.customer
+	form = CustomerForm(instance=customer)
+
+	if request.method == 'POST':
+		form = CustomerForm(request.POST, request.FILES, instance=customer)
+		if form.is_valid():
+			form.save()
+
+	context = {'form':form}
+	return render(request, 'accounts/account_settings.html', context)
+
 #Pages
 @login_required(login_url='login')
 @admin_only
@@ -137,7 +151,8 @@ def ViewPDF(request, type):
 		pk_test = request.GET["customerID"]
 		customer = Customer.objects.get(id=pk_test)
 		orders = customer.order_set.all()
-		pdf = render_to_pdf('reports/orders_rep.html', {"orders":orders, "customer":customer})
+		order_count = orders.count()
+		pdf = render_to_pdf('reports/orders_rep.html', {"orders":orders, "customer":customer, "order_count":order_count })
 		return HttpResponse(pdf, content_type='application/pdf')
 
 #CRUD operations

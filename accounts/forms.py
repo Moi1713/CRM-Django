@@ -25,11 +25,13 @@ class OrderForm(ModelForm):
 class CustomerForm(ModelForm):
 	class Meta:
 		model = Customer
-		fields = ('name', 'phone', 'email')
+		fields = '__all__'
+		exclude = ['user']
 		widgets = {
 			'name' : forms.TextInput(attrs={'class': 'form-control'}),
 			'phone' : forms.TextInput(attrs={'class': 'form-control'}),
 			'email' : forms.TextInput(attrs={'class': 'form-control'}),
+			'profile_pic' : forms.ClearableFileInput(attrs={'class': 'form-control'}),
 		}
 
 class ProductForm(ModelForm):
